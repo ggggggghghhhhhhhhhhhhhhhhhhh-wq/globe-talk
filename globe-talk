@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>Globe Talk - Live AI Operating Room</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 16px;
+      background: #0b0f19;
+      color: #f3f4f6;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    .card {
+      background: #111827;
+      border: 1px solid #ef4444;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 500px;
+      margin: 30px auto;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+    }
+    h1 {
+      color: #f87171;
+      margin-bottom: 8px;
+    }
+    .badge {
+      background: #1e293b;
+      color: #38bdf8;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      display: inline-block;
+      margin-bottom: 16px;
+      border: 1px solid #334155;
+    }
+    .info {
+      font-size: 14px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin: 12px 0;
+    }
+    .btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .btn:hover {
+      background: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🌐 Globe Talk</h1>
+    <span class="badge">🟢 AI Supreme Court Online</span>
+    <p class="info"><b>Short Videos • Voice Rooms • Direct Calling • AI Supreme Justice</b></p>
+    <p class="info"><b>Supreme Host:</b> Regina | <b>Bench:</b> 3 AI Judges</p>
+    <p class="info">इकोनॉमी: ₹1 = 100 कॉइन्स | ₹2 में 7 दिन VIP ट्रायल</p>
+    <button class="btn" onclick="alert('Globe Talk AI सिस्टम पूरी तरह सक्रिय है!')">एआई रूम टेस्ट करें</button>
+  </div>
+</body>
+</html>
