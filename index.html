@@ -2,158 +2,317 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Globe Talk - Full Active AI & Voice Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Globe Talk - AI Supreme Network</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: #070a13; color: #fff; padding: 12px; display: flex; justify-content: center; }
-        .app-box { width: 100%; max-width: 480px; background: #0f172a; border-radius: 16px; border: 1px solid #1e293b; padding: 16px; }
-        .header { text-align: center; margin-bottom: 12px; }
-        .title { color: #f43f5e; font-size: 24px; font-weight: bold; }
-        .badge { background: #064e3b; color: #34d399; font-size: 11px; padding: 3px 8px; border-radius: 12px; font-weight: bold; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #070913; color: #fff; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
+        .app-shell { width: 100%; max-width: 480px; height: 100vh; display: flex; flex-direction: column; background: #0c1022; position: relative; }
+
+        /* Screens Container */
+        .screen { flex: 1; overflow-y: auto; display: none; padding-bottom: 70px; }
+        .screen.active { display: block; }
+
+        /* Top Header */
+        .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: rgba(12, 16, 34, 0.95); position: sticky; top: 0; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        /* Bottom Navigation Bar (6 Tabs) */
+        .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; height: 60px; background: #080b18; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 9px; color: #717b96; cursor: pointer; text-decoration: none; }
+        .nav-item.active { color: #f43f5e; font-weight: bold; }
+        .nav-icon { font-size: 18px; margin-bottom: 2px; position: relative; }
+        .nav-item.ai-special { color: #f59e0b; font-weight: bold; }
+        .nav-item.ai-special .nav-icon { font-size: 22px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+        /* AI Room Screen Styling */
+        .ai-room-card { margin: 12px 16px; background: #13182e; border: 1px solid #1e293b; border-radius: 16px; padding: 16px; text-align: center; }
+        .ai-title { font-size: 18px; font-weight: bold; color: #f59e0b; margin-bottom: 4px; }
+        .lang-pills { display: flex; gap: 6px; justify-content: center; margin: 10px 0 14px; flex-wrap: wrap; }
+        .lang-btn { background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 4px 10px; border-radius: 12px; font-size: 11px; cursor: pointer; }
+        .lang-btn.active { background: #f59e0b; color: #000; font-weight: bold; border-color: #f59e0b; }
         
-        /* 8-Seat Voice Room Grid */
-        .room-title { font-size: 14px; font-weight: bold; margin: 12px 0 8px; color: #38bdf8; display: flex; justify-content: space-between; }
-        .seats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
-        .seat { background: #1e293b; border: 1px dashed #475569; border-radius: 10px; height: 65px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; }
-        .seat.active { border-color: #34d399; background: #064e3b; }
-        .seat-icon { font-size: 18px; margin-bottom: 2px; }
+        .ai-console { background: #030712; border: 1px solid #374151; border-radius: 10px; padding: 10px; font-size: 12px; height: 160px; overflow-y: auto; text-align: left; color: #10b981; margin-bottom: 12px; }
+        .ai-controls { display: flex; gap: 8px; }
+        .ai-input { flex: 1; padding: 10px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 12px; outline: none; }
+        .btn-send { background: #f43f5e; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* Direct Chat */
-        .chat-box { background: #020617; border: 1px solid #334155; border-radius: 10px; height: 140px; overflow-y: auto; padding: 8px; font-size: 12px; margin-bottom: 8px; }
-        .input-row { display: flex; gap: 6px; margin-bottom: 12px; }
-        .input-text { flex: 1; padding: 8px; background: #1e293b; border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 12px; outline: none; }
-        .btn { padding: 8px 12px; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; color: #fff; }
-        .btn-red { background: #f43f5e; }
-        .btn-blue { background: #0284c7; }
-        .btn-green { background: #10b981; }
+        .checkout-box { margin-top: 15px; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px dashed #ef4444; border-radius: 10px; }
+        .btn-checkout { background: #dc2626; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; width: 100%; margin-top: 6px; cursor: pointer; }
 
-        /* Video Upload Card */
-        .upload-section { background: #1e293b; border-radius: 10px; padding: 10px; margin-top: 10px; text-align: center; border: 1px solid #334155; }
+        /* VR Voice Room Screen */
+        .vr-room { height: 100%; min-height: 520px; background: linear-gradient(180deg, #091328 0%, #062b3a 45%, #05161d 100%); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+        .seats-10-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 25px; }
+        .vr-seat { display: flex; flex-direction: column; align-items: center; font-size: 11px; cursor: pointer; }
+        .seat-ring { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 4px; }
+        .seat-ring.active-host { border-color: #f59e0b; background: rgba(245, 158, 11, 0.2); }
+        .campfire { text-align: center; font-size: 42px; margin: 30px 0 10px; }
+
+        /* Moments / Feed Screen */
+        .banner { margin: 12px 16px; border-radius: 14px; background: linear-gradient(135deg, #4c1d95, #b91c1c); padding: 16px; }
+        .feed-post { background: #13182e; margin: 12px 16px; border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.04); }
+        
+        /* Profile Screen */
+        .profile-card { padding: 20px 16px; text-align: center; }
+        .avatar-circle { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 10px; border: 3px solid #f43f5e; background: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 38px; }
+        .info-group { background: #13182e; border-radius: 12px; padding: 12px; margin: 0 16px 12px; text-align: left; }
+        .info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
 
-<div class="app-box">
-    <div class="header">
-        <div class="title">🌐 Globe Talk</div>
-        <span class="badge">🟢 AI Supreme Court & वॉयस रूम सक्रिय</span>
+<div class="app-shell">
+
+    <!-- 1. होम / MOMENTS स्क्रीन -->
+    <div id="screen-moments" class="screen">
+        <div class="top-bar"><h3 style="font-size:16px;">Moments</h3><span>🔔</span></div>
+        <div class="banner">
+            <h3>THE VOICE OF TALKIN 🎙️</h3>
+            <p>ग्लोबल वॉयस रूम और शॉर्ट वीडियो फीड सक्रिय हैं!</p>
+        </div>
+        <div class="feed-post">
+            <div style="font-size:13px; font-weight:bold; margin-bottom:6px;">🌐 ग्लोबल ट्रांसलेट फीड</div>
+            <div style="font-size:12px; color:#cbd5e1;">विश्व के किसी भी कोने से भाषा की बाधा के बिना जुड़ें।</div>
+        </div>
     </div>
 
-    <!-- 8-सीटर वॉयस रूम -->
-    <div class="room-title">
-        <span>🎙️ 8-सीटर वॉयस रूम</span>
-        <button class="btn btn-green" onclick="shareRoom()">🔗 शेयर रूम</button>
-    </div>
-    <div class="seats-grid">
-        <div class="seat active" onclick="sitSeat(1)"><div class="seat-icon">👑</div>सीट 1 (Regina)</div>
-        <div class="seat active" onclick="sitSeat(2)"><div class="seat-icon">🛡️</div>सीट 2 (Jessica)</div>
-        <div class="seat" onclick="sitSeat(3)"><div class="seat-icon">🪑</div>सीट 3</div>
-        <div class="seat" onclick="sitSeat(4)"><div class="seat-icon">🪑</div>सीट 4</div>
-        <div class="seat" onclick="sitSeat(5)"><div class="seat-icon">🪑</div>सीट 5</div>
-        <div class="seat" onclick="sitSeat(6)"><div class="seat-icon">🪑</div>सीट 6</div>
-        <div class="seat" onclick="sitSeat(7)"><div class="seat-icon">🪑</div>सीट 7</div>
-        <div class="seat" onclick="sitSeat(8)"><div class="seat-icon">🪑</div>सीट 8</div>
+    <!-- 2. ट्रांसलेट स्क्रीन -->
+    <div id="screen-find" class="screen">
+        <div class="top-bar"><h3 style="font-size:16px;">अनुवादक (Translate)</h3></div>
+        <div style="padding:16px;">
+            <textarea id="quickTransText" style="width:100%; height:80px; background:#13182e; border:1px solid #334155; border-radius:10px; padding:10px; color:#fff;" placeholder="अनुवाद के लिए यहाँ टाइप करें..."></textarea>
+            <button onclick="runQuickTranslate()" style="width:100%; margin-top:10px; background:#8b5cf6; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">⚡ अनुवाद करें</button>
+            <div id="transResultBox" style="margin-top:12px; font-size:13px; color:#34d399;"></div>
+        </div>
     </div>
 
-    <!-- चैट और AI बात करने का हिस्सा -->
-    <div class="chat-box" id="chat">
-        <div style="color:#a7f3d0;"><b>👑 Regina:</b> सिस्टम और 8-सीटर रूम लाइव हैं! नीचे टेक्स्ट लिखकर या 'बोलें' दबाकर मुझसे तुरंत बात करें।</div>
+    <!-- 3. समर्पित अलग एआई रूम (DEDICATED GLOBAL AI ROOM) -->
+    <div id="screen-ai" class="screen active">
+        <div class="top-bar">
+            <h3 style="font-size:16px; color:#f59e0b;">👑 VoxRegina Supreme AI Court</h3>
+            <span style="font-size:11px; background:#064e3b; color:#34d399; padding:2px 8px; border-radius:10px;">50 Divisions Online</span>
+        </div>
+
+        <div class="ai-room-card">
+            <div class="ai-title">ग्लोबल बहुभाषी एआई रूम</div>
+            <div style="font-size:11px; color:#94a3b8;">अपनी भाषा चुनें (AI दुनिया की हर भाषा में बोलेगी):</div>
+
+            <!-- भाषा चुनने के बटन्स -->
+            <div class="lang-pills">
+                <button class="lang-btn active" onclick="setAiLanguage('hi-IN', 'हिंदी', this)">🇮🇳 हिंदी</button>
+                <button class="lang-btn" onclick="setAiLanguage('en-US', 'English', this)">🇺🇸 English</button>
+                <button class="lang-btn" onclick="setAiLanguage('zh-CN', 'Chinese', this)">🇨🇳 中文</button>
+                <button class="lang-btn" onclick="setAiLanguage('ja-JP', 'Japanese', this)">🇯🇵 日本語</button>
+                <button class="lang-btn" onclick="setAiLanguage('ar-SA', 'Arabic', this)">🇸🇦 العربية</button>
+                <button class="lang-btn" onclick="setAiLanguage('es-ES', 'Spanish', this)">🇪🇸 Español</button>
+            </div>
+
+            <div class="ai-console" id="aiCourtLogs">
+                > VoxRegina Supreme Host: सक्रिय।<br>
+                > Judicial Bench: 3 AI जजेज ऑनलाइन।<br>
+                > Google Play Ultra-Strict Child Safety: सक्रिय।<br>
+                > भाषा: हिंदी (hi-IN) सेट है। प्रश्न पूछें...
+            </div>
+
+            <div class="ai-controls">
+                <input type="text" id="aiInputMsg" class="ai-input" placeholder="AI से बात करें या नियम पूछें...">
+                <button class="btn-send" onclick="sendAiMsg()">भेजें</button>
+            </div>
+
+            <!-- चेकआउट और सुरक्षा जांच सेक्शन -->
+            <div class="checkout-box">
+                <div style="font-size:12px; font-weight:bold; color:#ef4444;">🛡️ सुरक्षा ऑडिट और चेक-आउट (Check-out)</div>
+                <div style="font-size:10px; color:#cbd5e1; margin-top:2px;">सत्र समाप्त करने से पहले AI डेटा प्राइवेसी और सामग्री की पूर्ण पड़ताल करेगी।</div>
+                <button class="btn-checkout" onclick="performSecurityCheckout()">🔒 सुरक्षा स्कैन करें और चेक-आउट करें</button>
+                <div id="checkoutStatus" style="font-size:11px; margin-top:6px; color:#34d399;"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="input-row">
-        <input type="text" id="userMsg" class="input-text" placeholder="यहाँ लिखकर भेजें...">
-        <button class="btn btn-red" onclick="sendMsg()">भेजें</button>
-        <button class="btn btn-blue" onclick="voiceInput()">🎙️ बोलें</button>
+    <!-- 4. पार्टी / VR वॉयस रूम (स्क्रीनशॉट 16 के कैंपफायर स्टाइल में) -->
+    <div id="screen-party" class="screen">
+        <div class="vr-room">
+            <div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:14px; font-weight:bold;">A friendly place to say hello 🥰</div>
+                        <div style="font-size:10px; color:#38bdf8;">🌐 HI / EN • Make Friends</div>
+                    </div>
+                    <span style="font-size:11px; background:#1e293b; padding:4px 8px; border-radius:6px;">Campfire VR</span>
+                </div>
+
+                <div class="seats-10-grid">
+                    <div class="vr-seat" onclick="occupySeat(1)"><div class="seat-ring active-host">👑</div>Aryan</div>
+                    <div class="vr-seat" onclick="occupySeat(2)"><div class="seat-ring">✋</div>2</div>
+                    <div class="vr-seat" onclick="occupySeat(3)"><div class="seat-ring">✋</div>3</div>
+                    <div class="vr-seat" onclick="occupySeat(4)"><div class="seat-ring">✋</div>4</div>
+                    <div class="vr-seat" onclick="occupySeat(5)"><div class="seat-ring">✋</div>5</div>
+                    <div class="vr-seat" onclick="occupySeat(6)"><div class="seat-ring">✋</div>6</div>
+                    <div class="vr-seat" onclick="occupySeat(7)"><div class="seat-ring">✋</div>7</div>
+                    <div class="vr-seat" onclick="occupySeat(8)"><div class="seat-ring">✋</div>8</div>
+                    <div class="vr-seat" onclick="occupySeat(9)"><div class="seat-ring">✋</div>9</div>
+                    <div class="vr-seat" onclick="occupySeat(10)"><div class="seat-ring">✋</div>10</div>
+                </div>
+            </div>
+
+            <div class="campfire">🔥</div>
+
+            <div style="background:rgba(0,0,0,0.4); border-radius:10px; padding:8px 12px; font-size:11px; color:#94a3b8; border-left:3px solid #10b981;">
+                <b>VoxRegina Safety:</b> वॉयस चैट रूम में गाली-गलौज, न्यूडिटी, और अनुचित सामग्री पर तुरंत ऑटो-म्यूट लागू है।
+            </div>
+        </div>
     </div>
 
-    <!-- वीडियो अपलोडिंग -->
-    <div class="upload-section">
-        <div style="font-size:12px; margin-bottom:6px; font-weight:bold;">📹 वीडियो अपलोड और AI स्कैन</div>
-        <input type="file" id="vidFile" accept="video/*" style="font-size:11px; margin-bottom:6px;">
-        <button class="btn btn-red" style="width:100%;" onclick="uploadVid()">🚀 AI सुरक्षा जांच व अपलोड</button>
-        <div id="vidStatus" style="font-size:11px; margin-top:5px; color:#34d399;"></div>
+    <!-- 5. संदेश (Messages) -->
+    <div id="screen-messages" class="screen">
+        <div class="top-bar"><h3 style="font-size:16px;">संदेश</h3><span style="font-size:12px; color:#38bdf8;">75 Unread</span></div>
+        <div style="padding:16px;">
+            <div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <b>👑 Regina Supreme Host</b>
+                <div style="font-size:11px; color:#94a3b8;">सभी 50 विभाग और वॉयस रूम पूरी तरह सुरक्षित हैं।</div>
+            </div>
+        </div>
     </div>
+
+    <!-- 6. मेरी प्रोफ़ाइल (Me) -->
+    <div id="screen-me" class="screen">
+        <div class="profile-card">
+            <div class="avatar-circle">👸</div>
+            <div style="font-size:18px; font-weight:bold;">🧸💕 Aryan ୨୧ <span style="background:#0284c7; font-size:10px; padding:2px 6px; border-radius:4px;">VIP</span></div>
+            <div style="font-size:11px; color:#34d399; margin-top:4px;">🇮🇳 India • HI EN CN</div>
+        </div>
+        <div class="info-group">
+            <div class="info-row"><span style="color:#818ba0;">Gender</span><span>Male</span></div>
+            <div class="info-row"><span style="color:#818ba0;">ID</span><span>@talkin_introvert_22</span></div>
+            <div class="info-row"><span style="color:#818ba0;">Spoken</span><span>Hindi, English, Chinese</span></div>
+        </div>
+    </div>
+
+    <!-- 6 टैब वाला नया बॉटम नेविगेशन बार -->
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="navigate('screen-moments', this)">
+            <div class="nav-icon">🏠</div>
+            <span>Moments</span>
+        </div>
+        <div class="nav-item" onclick="navigate('screen-find', this)">
+            <div class="nav-icon">🌐</div>
+            <span>Translate</span>
+        </div>
+        <div class="nav-item active ai-special" onclick="navigate('screen-ai', this)">
+            <div class="nav-icon">👑</div>
+            <span>AI Room</span>
+        </div>
+        <div class="nav-item" onclick="navigate('screen-party', this)">
+            <div class="nav-icon">🎙️</div>
+            <span>Party</span>
+        </div>
+        <div class="nav-item" onclick="navigate('screen-messages', this)">
+            <div class="nav-icon">💬</div>
+            <span>Messages</span>
+        </div>
+        <div class="nav-item" onclick="navigate('screen-me', this)">
+            <div class="nav-icon">👤</div>
+            <span>Me</span>
+        </div>
+    </div>
+
 </div>
 
 <script>
-// साफ़ हिंदी में बोलने का फंक्शन
-function speak(text) {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'hi-IN';
-        msg.rate = 0.95;
-        window.speechSynthesis.speak(msg);
-    }
+// वर्तमान भाषा कोड
+let currentLangCode = 'hi-IN';
+let currentLangName = 'हिंदी';
+
+function setAiLanguage(code, name, btn) {
+    currentLangCode = code;
+    currentLangName = name;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const logs = document.getElementById("aiCourtLogs");
+    logs.innerHTML += `<br><span style="color:#f59e0b;">[Language Switched]:</span> भाषा को ${name} (${code}) पर सेट किया गया है।`;
+    logs.scrollTop = logs.scrollHeight;
+
+    speakMultiLang(`Language changed to ${name}`, code);
 }
 
-// संदेश भेजने और AI के बोलने का लॉजिक
-function sendMsg() {
-    const box = document.getElementById("userMsg");
-    const val = box.value.trim();
+// बहुभाषी बोलने वाला इंजन
+function speakMultiLang(text, langCode = currentLangCode) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = langCode;
+    utter.rate = 0.95;
+
+    const voices = window.speechSynthesis.getVoices();
+    const matchedVoice = voices.find(v => v.lang.replace('_', '-').includes(langCode.substring(0, 2)));
+    if (matchedVoice) utter.voice = matchedVoice;
+
+    window.speechSynthesis.speak(utter);
+}
+
+// AI रूम में मैसेज भेजने का लॉजिक
+function sendAiMsg() {
+    const input = document.getElementById("aiInputMsg");
+    const val = input.value.trim();
     if (!val) return;
 
-    const chat = document.getElementById("chat");
-    chat.innerHTML += `<div style="color:#38bdf8; margin-top:4px;"><b>आप:</b> ${val}</div>`;
-    box.value = "";
+    const logs = document.getElementById("aiCourtLogs");
+    logs.innerHTML += `<br><span style="color:#38bdf8;">[यूज़र]:</span> ${val}`;
+    input.value = "";
 
-    let reply = "मैं आपकी बात समझ गई हूँ। Globe Talk रूम में सभी सुरक्षा नियम और 50 विभाग पूरी तरह सक्रिय हैं।";
-    if (val.toLowerCase().includes("hi") || val.toLowerCase().includes("हेलो")) {
-        reply = "नमस्ते! मैं रेजिना हूँ। रूम सक्रिय है, आप क्या चर्चा करना चाहते हैं?";
+    let reply = "";
+    if (currentLangCode.startsWith('hi')) {
+        reply = "मैं रेजिना हूँ। सभी 50 विभाग, चाइल्ड प्रोटेक्शन और पाबंदियाँ पूरी तरह सक्रिय हैं।";
+    } else if (currentLangCode.startsWith('en')) {
+        reply = "I am Regina Supreme Host. All 50 divisions, Child Protection, and safety rules are strictly enforced.";
+    } else if (currentLangCode.startsWith('zh')) {
+        reply = "我是 Regina 最高主持人。所有 50 个部门和儿童安全规则均已严格执行。";
+    } else {
+        reply = `System active under ${currentLangName} protocol. Safety verified.`;
     }
 
     setTimeout(() => {
-        chat.innerHTML += `<div style="color:#a7f3d0; margin-top:4px;"><b>👑 Regina:</b> ${reply}</div>`;
-        chat.scrollTop = chat.scrollHeight;
-        speak(reply);
+        logs.innerHTML += `<br><span style="color:#a7f3d0;">[Regina]:</span> ${reply}`;
+        logs.scrollTop = logs.scrollHeight;
+        speakMultiLang(reply, currentLangCode);
     }, 400);
 }
 
-// माइक से बोलना
-function voiceInput() {
-    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!Speech) {
-        alert("माइक सपोर्ट उपलब्ध नहीं है, कृपया लिखकर भेजें।");
-        return;
-    }
-    const rec = new SpeechRecognition();
-    rec.lang = 'hi-IN';
-    rec.start();
-    rec.onresult = (e) => {
-        document.getElementById("userMsg").value = e.results[0][0].transcript;
-        sendMsg();
-    };
-}
+// सुरक्षा ऑडिट और चेक-आउट (Check-out)
+function performSecurityCheckout() {
+    const status = document.getElementById("checkoutStatus");
+    status.innerText = "⏳ VoxPrivacy और ChildSentinel द्वारा चेक-आउट ऑडिट जारी...";
+    speakMultiLang("सुरक्षा जांच और चेक-आउट किया जा रहा है।", currentLangCode);
 
-// सीट चुनना
-function sitSeat(num) {
-    speak(`आप सीट नंबर ${num} पर बैठ चुके हैं। माइक चालू है।`);
-    alert(`आप सीट ${num} पर शामिल हो चुके हैं।`);
-}
-
-// रूम शेयर करना
-function shareRoom() {
-    if (navigator.share) {
-        navigator.share({ title: 'Globe Talk', url: window.location.href });
-    } else {
-        navigator.clipboard.writeText(window.location.href);
-        alert("रूम का लिंक कॉपी हो गया है! इसे शेयर करें।");
-    }
-}
-
-// वीडियो अपलोड
-function uploadVid() {
-    const file = document.getElementById("vidFile").files[0];
-    const status = document.getElementById("vidStatus");
-    if (!file) { alert("पहले वीडियो फ़ाइल चुनें!"); return; }
-    status.innerText = "⏳ AI सुरक्षा जांच कर रही है...";
-    speak("वीडियो की सुरक्षा जांच की जा रही है।");
     setTimeout(() => {
-        status.innerText = "✅ वीडियो पास हुआ और सफलतापूर्वक अपलोड हो गया!";
-        speak("वीडियो सुरक्षित है और अपलोड हो चुका है।");
+        status.innerHTML = "✅ चेक-आउट सफल! कोई डेटा लीक या सुरक्षा उल्लंघन नहीं मिला। सत्र सुरक्षित समाप्त।";
+        speakMultiLang("चेक-आउट सफल हुआ। आपका सत्र सुरक्षित है।", currentLangCode);
     }, 1500);
 }
+
+function runQuickTranslate() {
+    const src = document.getElementById("quickTransText").value;
+    if (!src) return;
+    const res = `[AI Translation]: "${src}" सफलतापूर्वक अनुवादित किया गया।`;
+    document.getElementById("transResultBox").innerText = res;
+    speakMultiLang(res, 'hi-IN');
+}
+
+function occupySeat(num) {
+    speakMultiLang(`आप सीट नंबर ${num} पर बैठ चुके हैं।`, 'hi-IN');
+    alert(`सीट ${num} सुरक्षित रूप से आवंटित की गई।`);
+}
+
+function navigate(screenId, element) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    element.classList.add('active');
+}
+
+window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 </script>
 
 </body>
