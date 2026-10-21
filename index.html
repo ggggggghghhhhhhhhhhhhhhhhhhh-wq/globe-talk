@@ -1,24 +1,108 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <title>Globe Talk - Live AI Operating Room</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { margin: 0; padding: 16px; background: #0b0f19; color: #f3f4f6; font-family: sans-serif; text-align: center; }
-    .card { background: #111827; border: 1px solid #ef4444; border-radius: 8px; padding: 24px; max-width: 500px; margin: 30px auto; }
-    h1 { color: #f87171; }
-    .badge { background: #1e293b; color: #38bdf8; padding: 6px 14px; border-radius: 12px; font-size: 13px; display: inline-block; }
-    .btn { background: #ef4444; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Globe Talk - AI Supreme Network</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b0f19; color: #f1f5f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
+        .app-card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; width: 100%; max-width: 480px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
+        .logo { font-size: 26px; font-weight: bold; color: #f87171; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .status-badge { display: inline-block; background: #064e3b; color: #34d399; font-size: 12px; padding: 4px 12px; border-radius: 20px; margin-bottom: 15px; font-weight: 600; }
+        .features { font-size: 13px; color: #94a3b8; margin-bottom: 12px; line-height: 1.5; }
+        .host-info { font-size: 13px; color: #cbd5e1; margin-bottom: 20px; font-weight: 500; }
+        .btn-test { background: #ef4444; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
+        .btn-test:active { transform: scale(0.98); }
+        .console-box { margin-top: 15px; background: #030712; border: 1px solid #374151; border-radius: 8px; padding: 10px; font-size: 12px; text-align: left; height: 160px; overflow-y: auto; color: #10b981; }
+        .ai-select { width: 100%; padding: 8px; margin-top: 12px; background: #1f2937; color: white; border: 1px solid #4b5563; border-radius: 6px; font-size: 13px; }
+    </style>
 </head>
 <body>
-  <div class="card">
-    <h1>🌐 Globe Talk</h1>
-    <span class="badge">🟢 AI Supreme Court Online</span>
-    <p>Short Videos • Voice Rooms • Direct Calling • AI Supreme Justice</p>
-    <p><b>Supreme Host:</b> Regina | <b>Bench:</b> 3 AI Judges</p>
-    <button class="btn" onclick="alert('Globe Talk AI सिस्टम सक्रिय है!')">एआई रूम टेस्ट करें</button>
-  </div>
+
+<div class="app-card">
+    <div class="logo">🌐 Globe Talk</div>
+    <div class="status-badge">🟢 AI Supreme Court Online</div>
+    <p class="features">Short Videos • Voice Rooms • Direct Calling • AI Supreme Justice</p>
+    <p class="host-info">Supreme Host: <b>Regina</b> | Bench: <b>3 AI Judges</b></p>
+
+    <label style="font-size: 12px; color: #94a3b8;">बोलने वाला AI चुनें:</label>
+    <select id="aiSpeaker" class="ai-select">
+        <option value="Regina">👑 Regina (Supreme Host)</option>
+        <option value="Jessica">🛡️ Jessica (Room Moderator)</option>
+        <option value="Judicial">⚖️ Judicial AI (Supreme Justice)</option>
+        <option value="ChildSafety">🛑 ChildSentinel AI (Maximum Protection)</option>
+    </select>
+
+    <div style="margin-top: 15px;">
+        <button class="btn-test" onclick="runAiSystem()">एआई रूम टेस्ट करें</button>
+    </div>
+
+    <div class="console-box" id="terminalLogs">
+        > VoxRegina Master Compliance Core Loaded.<br>
+        > 50 Divisions Active (10 VIP + 40 Backend).<br>
+        > Google Play Ultra-Strict Child Safety: ENFORCED.<br>
+        > सिस्टम तैयार है। टेस्ट बटन दबाएँ...
+    </div>
+</div>
+
+<script>
+// मास्टर पाबंदियाँ और कड़े सुरक्षा नियम
+const VOX_REGULATION_MATRIX = {
+    CHILD_SAFETY: "CSAM/CSAE जीरो टॉलरेंस - 0 सेकंड हार्डवेयर बैन और तात्कालिक लॉग फ्रीज।",
+    VIOLENCE: "शारीरिक हिंसा, हथियार व स्व-नुकसान पर 0.1 सेकंड में ऑडियो/वीडियो किल-स्विच।",
+    HARASSMENT: "गाली-गलौज व अभद्रता पर तत्काल माइक म्यूट और रूम से निष्कासन।",
+    PRIVACY: "फोन नंबर, पता, बैंक डेटा (Doxxing) का आदान-प्रदान पूरी तरह वर्जित।"
+};
+
+// AI स्पीच इंजन (Voice Engine)
+function speakMessage(text, role) {
+    if (!('speechSynthesis' in window)) {
+        alert("ब्राउज़र स्पीच इंजन उपलब्ध नहीं है।");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'hi-IN';
+    utterance.rate = 0.95;
+    utterance.pitch = (role === "Jessica") ? 1.2 : 1.0;
+
+    const voices = window.speechSynthesis.getVoices();
+    const hindiVoice = voices.find(v => v.lang.includes('hi') || v.lang.includes('IN'));
+    if (hindiVoice) utterance.voice = hindiVoice;
+
+    window.speechSynthesis.speak(utterance);
+}
+
+function runAiSystem() {
+    const speaker = document.getElementById("aiSpeaker").value;
+    const logs = document.getElementById("terminalLogs");
+    let speechText = "";
+
+    if (speaker === "Regina") {
+        speechText = "नमस्कार! मैं रेजिना सुप्रीम होस्ट हूँ। ग्लोब टॉक के 50 विभाग और वॉइस रूम्स सक्रिय हैं। प्ले स्टोर सुरक्षा नियमों का पूर्ण पालन अनिवार्य है।";
+        logs.innerHTML += `<br><span style="color:#f87171;">[Regina]</span>: रूम सक्रिय किया गया। ऑल 250 AI एजेंट्स ऑनलाइन।`;
+    } else if (speaker === "Jessica") {
+        speechText = "मैं जेसिका हूँ, रूम मॉडरेटर। किसी भी यूज़र द्वारा गाली-गलौज या बदसलूकी करने पर माइक तुरंत म्यूट कर दिया जाएगा।";
+        logs.innerHTML += `<br><span style="color:#60a5fa;">[Jessica]</span>: ऑटो-म्यूट और किक इंजन एक्टिवेट किया गया।`;
+    } else if (speaker === "ChildSafety") {
+        speechText = "अल्ट्रा चाइल्ड प्रोटेक्शन एक्टिवेट हो चुका है। नाबालिगों से निजी जानकारी मांगने या अनुचित बातचीत पर 0 सेकंड हार्डवेयर बैन लगेगा।";
+        logs.innerHTML += `<br><span style="color:#ef4444;">[ChildSentinel]</span>: CSAM/CSAE प्रिवेंशन सक्रिय।`;
+    } else {
+        speechText = "जुडिशियल एआई डिवीजन सक्रिय है। सभी साक्ष्यों की जांच निष्पक्ष रूप से की जा रही है।";
+        logs.innerHTML += `<br><span style="color:#fbbf24;">[Judicial AI]</span>: अपील और नियम ऑडिट सक्रिय।`;
+    }
+
+    logs.scrollTop = logs.scrollHeight;
+    speakMessage(speechText, speaker);
+}
+
+// मोबाइल पर आवाज़ें पहले से तैयार करना
+window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+};
+</script>
+
 </body>
 </html>
