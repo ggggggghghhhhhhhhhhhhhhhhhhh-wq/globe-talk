@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Globe Talk - Ultimate VIP Social & Voice Network</title>
+    <title>Globe Talk - Ultimate VIP & AI Social Network</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #070913; color: #fff; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
@@ -13,18 +13,18 @@
         .screen { flex: 1; overflow-y: auto; display: none; padding-bottom: 65px; }
         .screen.active { display: block; }
 
-        /* Header */
+        /* Top Bar */
         .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(12, 16, 34, 0.95); position: sticky; top: 0; z-index: 20; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .top-title { font-size: 15px; font-weight: 800; color: #f43f5e; display: flex; align-items: center; gap: 6px; }
-        .vip-badge-tag { background: linear-gradient(135deg, #f59e0b, #b45309); color: #000; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; }
 
-        /* Bottom Nav (8 Modules) */
+        /* Bottom Nav (6 Tabs) */
         .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; height: 60px; background: #080b18; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 9px; color: #717b96; cursor: pointer; text-decoration: none; }
         .nav-item.active { color: #f43f5e; font-weight: bold; }
-        .nav-icon { font-size: 17px; margin-bottom: 2px; }
+        .nav-icon { font-size: 18px; margin-bottom: 2px; }
+        .nav-item.ai-btn { color: #f59e0b !important; font-weight: bold; }
 
-        /* Common Elements */
+        /* Buttons */
         .btn { padding: 8px 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
         .btn-red { background: #f43f5e; }
         .btn-blue { background: #0284c7; }
@@ -37,7 +37,7 @@
         .room-meta { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; }
         .seats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 14px; }
         .seat { display: flex; flex-direction: column; align-items: center; font-size: 10px; cursor: pointer; text-align: center; }
-        .seat-ring { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 2px; position: relative; }
+        .seat-ring { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 2px; }
         .seat-ring.vip-host { border: 2px solid #f59e0b; background: rgba(245, 158, 11, 0.25); box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
         .campfire { text-align: center; font-size: 38px; margin: 15px 0 5px; animation: flame 1.5s infinite alternate; }
         @keyframes flame { 0% { transform: scale(0.95); } 100% { transform: scale(1.05); filter: drop-shadow(0 0 10px #f97316); } }
@@ -47,58 +47,62 @@
         .video-player { width: 100%; height: 210px; border-radius: 10px; background: #000; object-fit: cover; }
         .upload-dashed { border: 2px dashed #334155; padding: 14px; border-radius: 10px; text-align: center; cursor: pointer; margin-bottom: 10px; }
 
-        /* 3. Chat */
-        .chat-list-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
-        .chat-avatar { width: 44px; height: 44px; border-radius: 50%; background: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        /* 3. Direct AI Voice Console */
+        .ai-chat-box { background: #030712; border: 1px solid #1e293b; border-radius: 12px; height: 180px; overflow-y: auto; padding: 10px; font-size: 12px; color: #a7f3d0; margin-bottom: 10px; }
 
-        /* 4. Calling Overlay */
-        .call-screen { position: absolute; inset: 0; background: #050814; z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: space-between; padding: 50px 20px; }
-        .call-avatar { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #f43f5e; display: flex; align-items: center; justify-content: center; font-size: 50px; background: #1e293b; animation: ring 1.5s infinite; }
-        @keyframes ring { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        /* 4. Stranger Discovery Card */
+        .discovery-card { background: #13182e; border-radius: 14px; padding: 14px; margin: 12px 14px; text-align: center; border: 1px solid rgba(255,255,255,0.06); }
+        .match-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 10px; border: 3px solid #f43f5e; background: #1e293b; display: flex; align-items: center; justify-content: center; font-size: 38px; }
 
-        /* Forms, VIP & Cities */
-        .form-card { background: #13182e; border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        /* 5. VIP Store & Form Cards */
+        .vip-box { background: linear-gradient(135deg, #b45309, #78350f); border-radius: 14px; padding: 14px; margin: 12px 14px; border: 1px solid #f59e0b; }
+        .form-card { background: #13182e; border-radius: 12px; padding: 14px; margin: 12px 14px; border: 1px solid rgba(255,255,255,0.05); }
         .form-label { font-size: 11px; color: #818ba0; margin-bottom: 4px; display: block; font-weight: bold; }
         .form-input, .form-select { width: 100%; padding: 9px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 12px; outline: none; margin-bottom: 8px; }
-        .vip-box { background: linear-gradient(135deg, #b45309, #78350f); border-radius: 14px; padding: 14px; margin: 12px 14px; border: 1px solid #f59e0b; }
-        .city-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 14px; }
-        .city-card { background: #13182e; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="app-shell">
 
-    <!-- ================= 1. VIP VR CAMPFIRE ROOM ================= -->
+    <!-- TOP GLOBAL BAR -->
+    <div class="top-bar">
+        <div class="top-title">🌐 Globe Talk</div>
+        <div style="display:flex; gap:6px;">
+            <button class="btn btn-gold" onclick="promptCreateRoom()">➕ Naya Room Banayein</button>
+        </div>
+    </div>
+
+    <!-- ================= 1. ROOMS (10-SEATER WITH FULL HOST RIGHTS) ================= -->
     <div id="screen-room" class="screen active">
         <div class="vr-room">
             <div>
                 <div class="room-meta">
                     <div>
-                        <div style="font-size:14px; font-weight:bold;" id="activeRoomTitle">👑 Aryan's VIP Campfire Lounge</div>
-                        <div style="font-size:10px; color:#38bdf8;">Room ID: <b id="talkinRoomId">#GT-VIP-101</b> • Public 🌐</div>
+                        <div style="font-size:14px; font-weight:bold;" id="liveRoomTitle">👑 Aryan's VIP Lounge</div>
+                        <div style="font-size:10px; color:#38bdf8;">Room ID: <b id="liveRoomId">#GT-101</b> • Host: <span id="currentHostName">Aryan</span> 🌐</div>
                     </div>
                     <div style="display:flex; gap:4px;">
-                        <button class="btn btn-dark" onclick="shareTalkinRoom()">🔗 Share</button>
-                        <button class="btn btn-red" onclick="hostLeaveRoom()">🚪 Exit</button>
+                        <button class="btn btn-dark" onclick="shareRoom()">🔗 Share</button>
+                        <button class="btn btn-red" onclick="hostCloseRoom()">🚪 Room Chhodein / Band</button>
                     </div>
                 </div>
 
-                <!-- 10 Chairs Controlled by VIP Human Host -->
+                <!-- 10 Seats Managed By Room Host -->
                 <div class="seats-grid">
-                    <div class="seat" onclick="manageSeat(1, 'Aryan (VIP Host)')">
-                        <div class="seat-ring vip-host">👑</div>
-                        Aryan ୨୧
+                    <div class="seat" onclick="hostSeatControl(1, 'Host')">
+                        <div class="seat-ring vip-host" id="ringSeat1">👑</div>
+                        <span id="nameSeat1">Host</span>
                     </div>
-                    <div class="seat" onclick="manageSeat(2, 'Co-Host')"><div class="seat-ring">🛡️</div>Co-Host</div>
-                    <div class="seat" onclick="manageSeat(3, 'Seat 3')"><div class="seat-ring">🪑</div>Seat 3</div>
-                    <div class="seat" onclick="manageSeat(4, 'Seat 4')"><div class="seat-ring">🪑</div>Seat 4</div>
-                    <div class="seat" onclick="manageSeat(5, 'Seat 5')"><div class="seat-ring">🪑</div>Seat 5</div>
-                    <div class="seat" onclick="manageSeat(6, 'Seat 6')"><div class="seat-ring">🪑</div>Seat 6</div>
-                    <div class="seat" onclick="manageSeat(7, 'Seat 7')"><div class="seat-ring">🪑</div>Seat 7</div>
-                    <div class="seat" onclick="manageSeat(8, 'Seat 8')"><div class="seat-ring">🪑</div>Seat 8</div>
-                    <div class="seat" onclick="manageSeat(9, 'Seat 9')"><div class="seat-ring">🪑</div>Seat 9</div>
-                    <div class="seat" onclick="manageSeat(10, 'Seat 10')"><div class="seat-ring">🪑</div>Seat 10</div>
+                    <div class="seat" onclick="hostSeatControl(2, 'Seat 2')"><div class="seat-ring" id="ringSeat2">✋</div><span id="nameSeat2">Seat 2</span></div>
+                    <div class="seat" onclick="hostSeatControl(3, 'Seat 3')"><div class="seat-ring" id="ringSeat3">✋</div><span id="nameSeat3">Seat 3</span></div>
+                    <div class="seat" onclick="hostSeatControl(4, 'Seat 4')"><div class="seat-ring" id="ringSeat4">✋</div><span id="nameSeat4">Seat 4</span></div>
+                    <div class="seat" onclick="hostSeatControl(5, 'Seat 5')"><div class="seat-ring" id="ringSeat5">✋</div><span id="nameSeat5">Seat 5</span></div>
+                    <div class="seat" onclick="hostSeatControl(6, 'Seat 6')"><div class="seat-ring" id="ringSeat6">✋</div><span id="nameSeat6">Seat 6</span></div>
+                    <div class="seat" onclick="hostSeatControl(7, 'Seat 7')"><div class="seat-ring" id="ringSeat7">✋</div><span id="nameSeat7">Seat 7</span></div>
+                    <div class="seat" onclick="hostSeatControl(8, 'Seat 8')"><div class="seat-ring" id="ringSeat8">✋</div><span id="nameSeat8">Seat 8</span></div>
+                    <div class="seat" onclick="hostSeatControl(9, 'Seat 9')"><div class="seat-ring" id="ringSeat9">✋</div><span id="nameSeat9">Seat 9</span></div>
+                    <div class="seat" onclick="hostSeatControl(10, 'Seat 10')"><div class="seat-ring" id="ringSeat10">✋</div><span id="nameSeat10">Seat 10</span></div>
                 </div>
             </div>
 
@@ -106,13 +110,13 @@
 
             <div>
                 <div style="background:rgba(0,0,0,0.5); border-radius:8px; padding:6px 10px; font-size:10px; color:#94a3b8; border-left:3px solid #10b981; margin-bottom:6px;">
-                    <b>Regina Guardian:</b> Host manages mic permissions. CSAM zero-tolerance and Google Play child safety strictly active.
+                    <b>Host Controls Active:</b> Tap any seat to Mute, Unmute, or Transfer Host. Background AI protects against policy violation.
                 </div>
                 <div style="display:flex; gap:6px;">
-                    <input type="text" id="talkinChatInput" placeholder="Send public message or gift..." style="flex:1; padding:8px 12px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.2); border-radius:20px; color:#fff; font-size:12px; outline:none;">
-                    <button class="btn btn-red" onclick="sendChatMsg()">Send</button>
-                    <button class="btn btn-gold" onclick="navTo('screen-vip', document.querySelectorAll('.nav-item')[6])">🎁 Gift</button>
-                    <button class="btn btn-dark" onclick="reportParticipant()">⚠️</button>
+                    <input type="text" id="roomChatText" placeholder="Room message ya comment likhein..." style="flex:1; padding:8px 12px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.2); border-radius:20px; color:#fff; font-size:12px; outline:none;">
+                    <button class="btn btn-red" onclick="sendRoomMsg()">Bhejein</button>
+                    <button class="btn btn-gold" onclick="navTo('screen-store', document.querySelectorAll('.nav-item')[4])">🎁 Gift</button>
+                    <button class="btn btn-dark" onclick="reportAction()">⚠️</button>
                 </div>
             </div>
         </div>
@@ -121,210 +125,159 @@
     <!-- ================= 2. SHORT VIDEOS & REELS FEED ================= -->
     <div id="screen-videos" class="screen">
         <div class="top-bar">
-            <div class="top-title">📹 Short Videos Feed</div>
-            <span class="vip-badge-tag">AI Scanned</span>
+            <div class="top-title">📹 Short Videos & Moments</div>
+            <span style="font-size:10px; background:#059669; padding:2px 6px; border-radius:4px;">AI Verified</span>
         </div>
         <div class="video-box">
-            <div class="upload-dashed" onclick="document.getElementById('videoFile').click()">
-                📁 <b>Upload Short Video</b>
-                <div style="font-size:10px; color:#94a3b8; margin-top:3px;">AI pre-scans compliance before publishing</div>
-                <input type="file" id="videoFile" accept="video/*" style="display:none;" onchange="uploadShortVideo(event)">
+            <div class="upload-dashed" onclick="document.getElementById('shortVideoFile').click()">
+                📁 <b>Apni Short Video Upload Karein</b>
+                <div style="font-size:10px; color:#94a3b8; margin-top:3px;">Gallery se chunein (AI pehle compliance scan karegi)</div>
+                <input type="file" id="shortVideoFile" accept="video/*" style="display:none;" onchange="handleVideoUpload(event)">
             </div>
-            <div id="videoUploadMsg" style="font-size:11px; color:#34d399; margin-bottom:6px;"></div>
+            <div id="videoStatusMsg" style="font-size:11px; color:#34d399; margin-bottom:6px;"></div>
 
-            <video class="video-player" id="videoFeedPlayer" controls autoplay muted loop>
+            <video class="video-player" id="feedPlayer" controls autoplay muted loop>
                 <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
             </video>
             <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
                 <div>
-                    <div style="font-size:13px; font-weight:bold;">@yota_cosplay 🇯🇵 Tokyo Moments</div>
-                    <div style="font-size:11px; color:#94a3b8;">Welcome to Globe Talk global super community! ✨</div>
+                    <b>@talkin_introvert_22</b>
+                    <div style="font-size:11px; color:#94a3b8;">Testing Globe Talk Video Engine! 🎉</div>
                 </div>
-                <button class="btn btn-red" onclick="speakText('Video liked!')">❤️ Like</button>
+                <button class="btn btn-red" onclick="speakText('Video Liked!')">❤️ Like</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= 3. ONE-TO-ONE CHAT ================= -->
-    <div id="screen-chat" class="screen">
+    <!-- ================= 3. DIRECT AI VOICE CONSOLE (MIC TALK) ================= -->
+    <div id="screen-ai" class="screen">
         <div class="top-bar">
-            <div class="top-title">💬 Encrypted One-to-One Chat</div>
-            <span style="font-size:11px; color:#34d399;">Active</span>
+            <div class="top-title" style="color:#f59e0b;">👑 Direct Speaking AI Console</div>
+            <span style="font-size:10px; background:#064e3b; color:#34d399; padding:2px 8px; border-radius:10px;">50 Divisions Live</span>
         </div>
-        <div class="chat-list-item" onclick="openPrivateChat('Yota (Tokyo)')">
-            <div class="chat-avatar">🌸</div>
-            <div style="flex:1;">
-                <div style="font-size:13px; font-weight:bold;">Yota <span style="font-size:10px; color:#38bdf8;">🇯🇵 Tokyo</span></div>
-                <div style="font-size:11px; color:#94a3b8;">Hey Aryan! Ready to join your VR room.</div>
-            </div>
-            <button class="btn btn-blue" onclick="startCall('Yota')">📞 Call</button>
-        </div>
-        <div class="chat-list-item" onclick="openPrivateChat('Jessica Sentinel')">
-            <div class="chat-avatar" style="background:#ef4444;">🛡️</div>
-            <div style="flex:1;">
-                <div style="font-size:13px; font-weight:bold;">Jessica (Moderator AI)</div>
-                <div style="font-size:11px; color:#94a3b8;">All 50 divisions operational. No policy breaches.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= 4. CALL & CALL HISTORY ================= -->
-    <div id="screen-call" class="screen">
-        <div class="top-bar"><div class="top-title">📞 Calls & Audio History</div></div>
         <div style="padding:14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#13182e; padding:12px; border-radius:10px; margin-bottom:8px;">
-                <div>
-                    <div style="font-size:13px; font-weight:bold;">Yota (Tokyo)</div>
-                    <div style="font-size:10px; color:#10b981;">Incoming Voice Call • 05:24 min</div>
-                </div>
-                <button class="btn btn-blue" onclick="startCall('Yota')">Call Again</button>
+            <div class="ai-chat-box" id="aiLogsScreen">
+                > VoxRegina Supreme AI: Online.<br>
+                > Jessica Moderator: Ready.<br>
+                > Mic chalu karein aur seedhe bolkar baat karein...
+            </div>
+            <div style="display:flex; gap:6px; margin-bottom:8px;">
+                <input type="text" id="aiQueryInput" class="form-input" style="margin-bottom:0;" placeholder="Likhkar ya bolkar AI se baat karein...">
+                <button class="btn btn-red" onclick="sendAiQuery()">Bhejein</button>
+                <button class="btn btn-blue" id="micBtnToggle" onclick="toggleDirectAiMic()">🎙️ Mic On</button>
+            </div>
+            <label class="form-label">Active AI Host:</label>
+            <select id="aiVoiceChoice" class="form-select" onchange="switchVoiceHost()">
+                <option value="Regina">👑 Regina (Supreme Host) - Hindi/Global</option>
+                <option value="Jessica">🛡️ Jessica (Security Moderator)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ================= 4. GLOBAL STRANGER DISCOVERY ================= -->
+    <div id="screen-discovery" class="screen">
+        <div class="top-bar"><div class="top-title">🌍 Global Stranger Match</div></div>
+        <div class="discovery-card">
+            <div class="match-avatar" id="discAvatar">🌸</div>
+            <h3 id="discName">Yota (21)</h3>
+            <div style="font-size:11px; color:#38bdf8; margin:4px 0;" id="discCountry">🇯🇵 Tokyo, Japan</div>
+            <p style="font-size:11px; color:#cbd5e1; margin-bottom:12px;" id="discBio">"Looking for new international friends to talk about anime and life! 🥰"</p>
+            <div style="display:flex; justify-content:center; gap:8px;">
+                <button class="btn btn-blue" onclick="speakText('Connecting text chat with stranger')">💬 Chat</button>
+                <button class="btn btn-green" onclick="speakText('Voice call initiated')">📞 Voice Call</button>
+                <button class="btn btn-gold" onclick="nextStrangerMatch()">🎲 Next Match</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= 5. CITIES & COMMUNITIES ================= -->
-    <div id="screen-cities" class="screen">
-        <div class="top-bar"><div class="top-title">🌍 Select City Lounge</div></div>
-        <div class="city-grid">
-            <div class="city-card" onclick="pickCity('Agra 🏛️', '#GT-AGR-101')">🏛️ <b>Agra</b><div style="font-size:10px; color:#94a3b8;">Taj Community</div></div>
-            <div class="city-card" onclick="pickCity('Delhi 🏙️', '#GT-DEL-202')">🏙️ <b>Delhi</b><div style="font-size:10px; color:#94a3b8;">Capital Hub</div></div>
-            <div class="city-card" onclick="pickCity('Mumbai 🌊', '#GT-BOM-303')">🌊 <b>Mumbai</b><div style="font-size:10px; color:#94a3b8;">Marine Drive</div></div>
-            <div class="city-card" onclick="pickCity('Tokyo 🗼', '#GT-TYO-404')">🗼 <b>Tokyo</b><div style="font-size:10px; color:#94a3b8;">Shibuya Vibe</div></div>
-            <div class="city-card" onclick="pickCity('New York 🗽', '#GT-NYC-505')">🗽 <b>New York</b><div style="font-size:10px; color:#94a3b8;">Manhattan</div></div>
-            <div class="city-card" onclick="pickCity('Paris 🥐', '#GT-PAR-606')">🥐 <b>Paris</b><div style="font-size:10px; color:#94a3b8;">Eiffel Lounge</div></div>
-        </div>
-    </div>
-
-    <!-- ================= 6. REAL-TIME TRANSLATOR ================= -->
-    <div id="screen-translate" class="screen">
-        <div class="top-bar"><div class="top-title">🌐 Multi-Language AI Translator</div></div>
-        <div style="padding:14px;">
-            <div class="form-card">
-                <label class="form-label">Write in any language:</label>
-                <textarea id="liveTransInput" class="form-input" style="height:70px;" placeholder="Type text here..."></textarea>
-                <button class="btn btn-blue" style="width:100%;" onclick="runTranslate()">⚡ AI Translate & Speak</button>
-            </div>
-            <div class="form-card">
-                <label class="form-label">Translation Output:</label>
-                <div id="liveTransOutput" style="font-size:13px; color:#34d399;">Translation will appear here...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= 7. VIP STORE (₹2 TRIAL & GIFTS) ================= -->
-    <div id="screen-vip" class="screen">
+    <!-- ================= 5. VIP STORE & ₹2 TRIAL ================= -->
+    <div id="screen-store" class="screen">
         <div class="top-bar"><div class="top-title">💎 VIP Store & Gifts</div></div>
         <div class="vip-box">
-            <h2 style="font-size:17px; color:#fbbf24; margin-bottom:4px;">👑 VIP 7-Day Free Trial (₹2 Only)</h2>
-            <p style="font-size:11px; color:#fde68a; margin-bottom:10px;">Token verification fee of ₹2 unlocks VIP Crown badge, special room background, and exclusive virtual gifts.</p>
-            <button class="btn btn-gold" style="width:100%; font-size:12px; padding:10px;" onclick="activateVip()">⚡ Pay ₹2 & Activate 7-Day Trial</button>
+            <h2 style="font-size:17px; color:#fbbf24; margin-bottom:4px;">👑 ₹2 VIP 7-Day Free Trial</h2>
+            <p style="font-size:11px; color:#fde68a; margin-bottom:10px;">Token fee of ₹2 unlocks VIP Crown badge, host priority, and animated virtual gifts.</p>
+            <button class="btn btn-gold" style="width:100%;" onclick="activateVipTrial()">⚡ Pay ₹2 & Activate 7-Day Free Trial</button>
         </div>
-        <div style="padding:0 14px;">
-            <div class="form-card">
-                <div style="font-size:12px; font-weight:bold; margin-bottom:8px;">🎁 Animated Gifts Collection</div>
-                <div style="display:flex; justify-content:space-around; text-align:center; font-size:11px;">
-                    <div onclick="sendGift('Rose 🌹')">🌹<br>Rose (10c)</div>
-                    <div onclick="sendGift('Crown 👑')">👑<br>Crown (100c)</div>
-                    <div onclick="sendGift('Diamond 💎')">💎<br>Diamond (500c)</div>
-                    <div onclick="sendGift('Rocket 🚀')">🚀<br>Rocket (1000c)</div>
-                </div>
+        <div class="form-card">
+            <div style="font-size:12px; font-weight:bold; margin-bottom:8px;">🎁 Virtual Gifts Collection</div>
+            <div style="display:flex; justify-content:space-around; text-align:center; font-size:11px;">
+                <div onclick="sendGiftItem('Rose 🌹')">🌹<br>Rose</div>
+                <div onclick="sendGiftItem('Crown 👑')">👑<br>Crown</div>
+                <div onclick="sendGiftItem('Diamond 💎')">💎<br>Diamond</div>
+                <div onclick="sendGiftItem('Rocket 🚀')">🚀<br>Rocket</div>
             </div>
         </div>
     </div>
 
-    <!-- ================= 8. USER PROFILE & EMAIL SETUP ================= -->
+    <!-- ================= 6. USER PROFILE & IDENTITY RIGHTS ================= -->
     <div id="screen-profile" class="screen">
-        <div class="top-bar"><div class="top-title">👤 User Profile & Identity</div></div>
-        <div style="padding:14px;">
-            <div class="form-card">
-                <div style="font-size:12px; font-weight:bold; color:#f43f5e; margin-bottom:8px;">📧 Email & Account Credentials</div>
-                <label class="form-label">Email ID:</label>
-                <input type="email" id="profileEmail" class="form-input" value="aryan@globetalk.internal">
-                <label class="form-label">User ID / Handle:</label>
-                <input type="text" id="profileHandle" class="form-input" value="@talkin_introvert_22">
-            </div>
+        <div class="top-bar"><div class="top-title">👤 User Identity & Demographics</div></div>
+        <div class="form-card">
+            <div style="font-size:12px; font-weight:bold; color:#f43f5e; margin-bottom:8px;">📧 Email & Account Setup</div>
+            <label class="form-label">Email ID:</label>
+            <input type="email" id="userEmail" class="form-input" value="aryan@globetalk.internal">
+            <label class="form-label">User Room Handle / ID:</label>
+            <input type="text" id="userHandle" class="form-input" value="@talkin_introvert_22">
+        </div>
 
-            <div class="form-card">
-                <div style="font-size:12px; font-weight:bold; color:#f43f5e; margin-bottom:8px;">⚙️ Identity & Demographics</div>
-                <label class="form-label">Nickname:</label>
-                <input type="text" id="profileNick" class="form-input" value="🧸💕 Aryan ୨୧">
-                
-                <label class="form-label">Gender:</label>
-                <select id="profileGender" class="form-select">
-                    <option value="Male" selected>Male 👨</option>
-                    <option value="Female">Female 👩</option>
-                    <option value="Other">Non-Binary / Other 🌈</option>
-                </select>
+        <div class="form-card">
+            <div style="font-size:12px; font-weight:bold; color:#f43f5e; margin-bottom:8px;">⚙️ Personal Preferences (Full Control)</div>
+            <label class="form-label">Nickname:</label>
+            <input type="text" id="userNick" class="form-input" value="🧸💕 Aryan ୨୧">
 
-                <label class="form-label">Country:</label>
-                <select id="profileCountry" class="form-select">
-                    <option value="India 🇮🇳" selected>India 🇮🇳</option>
-                    <option value="Japan 🇯🇵">Japan 🇯🇵</option>
-                    <option value="USA 🇺🇸">USA 🇺🇸</option>
-                    <option value="China 🇨🇳">China 🇨🇳</option>
-                    <option value="UAE 🇦🇪">UAE 🇦🇪</option>
-                    <option value="France 🇫🇷">France 🇫🇷</option>
-                </select>
+            <label class="form-label">Gender Selection:</label>
+            <select id="userGender" class="form-select">
+                <option value="Male" selected>Male 👨</option>
+                <option value="Female">Female 👩</option>
+                <option value="Other">Non-Binary / Other 🌈</option>
+            </select>
 
-                <button class="btn btn-blue" style="width:100%;" onclick="saveProfile()">💾 Save Profile Information</button>
-            </div>
+            <label class="form-label">Country / Nationality:</label>
+            <select id="userCountry" class="form-select">
+                <option value="India 🇮🇳" selected>India 🇮🇳</option>
+                <option value="Japan 🇯🇵">Japan 🇯🇵</option>
+                <option value="USA 🇺🇸">USA 🇺🇸</option>
+                <option value="China 🇨🇳">China 🇨🇳</option>
+                <option value="UAE 🇦🇪">UAE 🇦🇪</option>
+                <option value="France 🇫🇷">France 🇫🇷</option>
+            </select>
+
+            <button class="btn btn-blue" style="width:100%;" onclick="saveProfileInfo()">💾 Save Identity Details</button>
         </div>
     </div>
 
-    <!-- ================= LIVE CALLING OVERLAY ================= -->
-    <div class="call-screen" id="callOverlay">
-        <div style="text-align:center;">
-            <div class="call-avatar">📞</div>
-            <h3 style="margin-top:14px;" id="callerName">Yota</h3>
-            <p style="font-size:12px; color:#34d399;" id="callStatus">Calling...</p>
-        </div>
-        <div style="display:flex; gap:20px;">
-            <button class="btn btn-dark" style="border-radius:50%; width:50px; height:50px; font-size:20px;" onclick="speakText('Mute toggled')">🎙️</button>
-            <button class="btn btn-red" style="border-radius:50%; width:50px; height:50px; font-size:20px;" onclick="endCall()">🛑</button>
-            <button class="btn btn-dark" style="border-radius:50%; width:50px; height:50px; font-size:20px;" onclick="reportParticipant()">⚠️</button>
-        </div>
-    </div>
-
-    <!-- ================= BOTTOM NAVIGATION BAR (8 MODULES) ================= -->
+    <!-- ================= BOTTOM NAVIGATION BAR (6 TABS) ================= -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="navTo('screen-room', this)">
             <div class="nav-icon">🎙️</div>
-            <span>Room</span>
+            <span>Rooms</span>
         </div>
         <div class="nav-item" onclick="navTo('screen-videos', this)">
             <div class="nav-icon">📹</div>
             <span>Videos</span>
         </div>
-        <div class="nav-item" onclick="navTo('screen-chat', this)">
-            <div class="nav-icon">💬</div>
-            <span>Chat</span>
+        <div class="nav-item ai-btn" onclick="navTo('screen-ai', this)">
+            <div class="nav-icon">👑</div>
+            <span>AI Talk</span>
         </div>
-        <div class="nav-item" onclick="navTo('screen-call', this)">
-            <div class="nav-icon">📞</div>
-            <span>Call</span>
+        <div class="nav-item" onclick="navTo('screen-discovery', this)">
+            <div class="nav-icon">🌍</div>
+            <span>Discovery</span>
         </div>
-        <div class="nav-item" onclick="navTo('screen-cities', this)">
-            <div class="nav-icon">🏙️</div>
-            <span>Cities</span>
-        </div>
-        <div class="nav-item" onclick="navTo('screen-translate', this)">
-            <div class="nav-icon">🌐</div>
-            <span>Translate</span>
-        </div>
-        <div class="nav-item" onclick="navTo('screen-vip', this)">
+        <div class="nav-item" onclick="navTo('screen-store', this)">
             <div class="nav-icon">💎</div>
-            <span>VIP</span>
+            <span>Store</span>
         </div>
         <div class="nav-item" onclick="navTo('screen-profile', this)">
             <div class="nav-icon">👤</div>
-            <span>Me</span>
+            <span>Profile</span>
         </div>
     </div>
 
 </div>
 
 <script>
-// 1. Navigation Controller
+// 1. Navigation Controller (6 Tabs)
 function navTo(screenId, el) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -343,45 +296,120 @@ function speakText(text, lang = 'hi-IN') {
     }
 }
 
-// 3. VIP Host Seat Actions
-function manageSeat(num, label) {
-    if (num === 1) {
-        speakText("Aap Aryan VIP Host hain. Aapke paas pure room ka control hai.");
-        alert("👑 Aryan (VIP Host) seat: Full host controls active.");
-    } else {
-        const choice = confirm(`Seat ${num} (${label}): Kya aap is user ko mic assign karna chahte hain?`);
-        if (choice) {
-            speakText(`Seat number ${num} ko mic assign kar diya gaya hai.`);
-            alert(`Seat ${num} mic unmuted by Host Aryan.`);
+// 3. User Room Creation & Host Rights
+let currentHost = "Aryan";
+function promptCreateRoom() {
+    const title = prompt("Apne naye 10-seater room ka naam likhein:", "Aryan's Live Lounge");
+    if (!title) return;
+    const randId = Math.floor(100 + Math.random() * 900);
+    document.getElementById("liveRoomTitle").innerText = `👑 ${title}`;
+    document.getElementById("liveRoomId").innerText = `#GT-${randId}`;
+    document.getElementById("currentHostName").innerText = currentHost;
+    speakText(`Naya room banaya gaya: ${title}. Aap is room ke mukhya host hain.`);
+    alert(`Room "${title}" live ho gaya! Aap iske main host hain.`);
+}
+
+function hostSeatControl(seatNum, seatLabel) {
+    if (seatNum === 1) {
+        alert(`👑 Main Host (${currentHost}): Aapke paas pure room ka control hai.`);
+        return;
+    }
+    const action = prompt(`Seat ${seatNum} Control:\n1: Mic Mute / Unmute karein\n2: Is seat wale ko Main Host banayein\n(1 ya 2 type karein):`, "1");
+    if (action === "1") {
+        speakText(`Seat number ${seatNum} ka mic status toggle kiya gaya.`);
+        alert(`Seat ${seatNum} mic status updated.`);
+    } else if (action === "2") {
+        const newHostName = prompt(`Seat ${seatNum} wale user ka naam likhein jise Host banana hai:`, `User_${seatNum}`);
+        if (newHostName) {
+            currentHost = newHostName;
+            document.getElementById("currentHostName").innerText = newHostName;
+            document.getElementById("nameSeat1").innerText = newHostName;
+            speakText(`Host rights ${newHostName} ko transfer kar diye gaye hain.`);
+            alert(`👑 ${newHostName} ab is room ka naya Host hai!`);
         }
     }
 }
 
-// 4. Room Functions
-function shareTalkinRoom() {
-    const roomId = document.getElementById("talkinRoomId").innerText;
-    if (navigator.share) {
-        navigator.share({ title: 'Globe Talk Room', text: `Join Aryan's VIP Room: ${roomId}`, url: window.location.href });
-    } else {
-        navigator.clipboard.writeText(`${window.location.href} (Room: ${roomId})`);
-        alert(`Room link & ID copied: ${roomId}`);
+function hostCloseRoom() {
+    const confirmClose = confirm("Kya aap is room ko band karke bahar jana chahte hain?");
+    if (confirmClose) {
+        speakText("Aap room se bahar aa gaye hain.");
+        alert("Room safely closed / exited.");
     }
 }
-function hostLeaveRoom() {
-    speakText("Aapne room band kar diya hai.");
-    alert("VIP Host closed the session safely.");
+
+function shareRoom() {
+    const id = document.getElementById("liveRoomId").innerText;
+    if (navigator.share) {
+        navigator.share({ title: 'Globe Talk Room', text: `Join my 10-seater room: ${id}`, url: window.location.href });
+    } else {
+        navigator.clipboard.writeText(`${window.location.href} (Room: ${id})`);
+        alert(`Room link copied: ${id}`);
+    }
 }
-function sendChatMsg() {
-    const input = document.getElementById("talkinChatInput");
+
+function sendRoomMsg() {
+    const input = document.getElementById("roomChatText");
     if (!input.value.trim()) return;
-    speakText(`Message posted: ${input.value}`);
+    speakText(`Message sent: ${input.value}`);
     input.value = "";
 }
 
+// 4. Direct Speaking AI Console & Mic
+let aiRecognition;
+function toggleDirectAiMic() {
+    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Speech) {
+        alert("Browser mein voice input support nahi hai. Likhkar bhejein.");
+        return;
+    }
+    const btn = document.getElementById("micBtnToggle");
+    if (!aiRecognition) {
+        aiRecognition = new SpeechRecognition();
+        aiRecognition.lang = 'hi-IN';
+        aiRecognition.onstart = () => { btn.innerText = "🔴 Listening..."; };
+        aiRecognition.onresult = (e) => {
+            const transcript = e.results[0][0].transcript;
+            document.getElementById("aiQueryInput").value = transcript;
+            sendAiQuery();
+        };
+        aiRecognition.onend = () => { btn.innerText = "🎙️ Mic On"; aiRecognition = null; };
+        aiRecognition.start();
+    } else {
+        aiRecognition.stop();
+        aiRecognition = null;
+        btn.innerText = "🎙️ Mic On";
+    }
+}
+
+function sendAiQuery() {
+    const input = document.getElementById("aiQueryInput");
+    const val = input.value.trim();
+    if (!val) return;
+
+    const logs = document.getElementById("aiLogsScreen");
+    logs.innerHTML += `<br><span style="color:#38bdf8;">[You]:</span> ${val}`;
+    input.value = "";
+
+    const choice = document.getElementById("aiVoiceChoice").value;
+    let reply = `Main ${choice} hoon. Globe Talk ke 50 divisions aur child safety rules sakriya hain.`;
+
+    setTimeout(() => {
+        logs.innerHTML += `<br><span style="color:#f59e0b;">[${choice}]:</span> ${reply}`;
+        logs.scrollTop = logs.scrollHeight;
+        speakText(reply, 'hi-IN');
+    }, 400);
+}
+
+function switchVoiceHost() {
+    const choice = document.getElementById("aiVoiceChoice").value;
+    speakText(`Active AI speaker switched to ${choice}`);
+}
+
 // 5. Short Video Upload & AI Scanner
-function uploadShortVideo(event) {
+function handleVideoUpload(event) {
     const file = event.target.files[0];
-    const msg = document.getElementById("videoUploadMsg");
+    const msg = document.getElementById("videoStatusMsg");
     if (!file) return;
 
     msg.innerText = "⏳ AI Video Sentinel safety scan running...";
@@ -389,72 +417,51 @@ function uploadShortVideo(event) {
 
     setTimeout(() => {
         msg.innerText = "✅ Video approved & published successfully!";
-        const player = document.getElementById("videoFeedPlayer");
+        const player = document.getElementById("feedPlayer");
         player.src = URL.createObjectURL(file);
         speakText("Video safety verified. Upload safal hua.");
     }, 1500);
 }
 
-// 6. Calling Functions
-function startCall(name) {
-    document.getElementById("callerName").innerText = name;
-    document.getElementById("callStatus").innerText = "Connecting...";
-    document.getElementById("callOverlay").style.display = "flex";
-    speakText(`${name} ko call kiya ja raha hai.`);
-    setTimeout(() => {
-        document.getElementById("callStatus").innerText = "Call Connected • 00:01";
-    }, 1500);
-}
-function endCall() {
-    document.getElementById("callOverlay").style.display = "none";
-    speakText("Call khatam ho gayi.");
-}
-
-// 7. City Selection
-function pickCity(cityName, roomId) {
-    document.getElementById("activeRoomTitle").innerText = `👑 Aryan's ${cityName} Lounge`;
-    document.getElementById("talkinRoomId").innerText = roomId;
-    speakText(`${cityName} room select kiya gaya.`);
-    alert(`Switched to ${cityName} with ID: ${roomId}`);
-    navTo('screen-room', document.querySelectorAll('.nav-item')[0]);
+// 6. Stranger Discovery Matches
+const MATCHES = [
+    { name: "Yota (21)", avatar: "🌸", country: "🇯🇵 Tokyo, Japan", bio: "Looking for new international friends! 🥰" },
+    { name: "Emily (23)", avatar: "🗽", country: "🇺🇸 New York, USA", bio: "Love traveling and exploring global languages! ✈️" },
+    { name: "Lucas (24)", avatar: "🥐", country: "🇫🇷 Paris, France", bio: "Bonjour! Passionate about music and arts. 🎨" }
+];
+let matchIndex = 0;
+function nextStrangerMatch() {
+    matchIndex = (matchIndex + 1) % MATCHES.length;
+    const m = MATCHES[matchIndex];
+    document.getElementById("discName").innerText = m.name;
+    document.getElementById("discAvatar").innerText = m.avatar;
+    document.getElementById("discCountry").innerText = m.country;
+    document.getElementById("discBio").innerText = `"${m.bio}"`;
+    speakText(`${m.name} matched from ${m.country}`);
 }
 
-// 8. Translation
-function runTranslate() {
-    const txt = document.getElementById("liveTransInput").value.trim();
-    if (!txt) return;
-    const res = `[AI Translation]: "${txt}" connects all languages seamlessly!`;
-    document.getElementById("liveTransOutput").innerText = res;
-    speakText(res, 'en-US');
-}
-
-// 9. VIP ₹2 Trial & Gifting
-function activateVip() {
+// 7. VIP Store & Gifting
+function activateVipTrial() {
     speakText("Badhai ho! ₹2 ka 7-Day VIP Free Trial active ho gaya hai.");
     alert("👑 VIP Activated: ₹2 verification success. 7-Day Free Trial unlocked!");
 }
-function sendGift(gift) {
+function sendGiftItem(gift) {
     speakText(`Aapne ${gift} gift bheja hai.`);
-    alert(`🎁 Sent ${gift} to Host Aryan!`);
+    alert(`🎁 Sent ${gift}!`);
 }
 
-// 10. Profile Update
-function saveProfile() {
-    const nick = document.getElementById("profileNick").value;
-    const gender = document.getElementById("profileGender").value;
-    const country = document.getElementById("profileCountry").value;
+// 8. Profile Setup
+function saveProfileInfo() {
+    const nick = document.getElementById("userNick").value;
+    const gender = document.getElementById("userGender").value;
+    const country = document.getElementById("userCountry").value;
     speakText("Profile details update ho chuki hain.");
     alert(`Profile Saved: ${nick} | Gender: ${gender} | Country: ${country}`);
 }
 
-function reportParticipant() {
+function reportAction() {
     speakText("Report submit kar di gayi hai.");
-    alert("⚠️ Report submitted to Background Judicial Division.");
-}
-
-function openPrivateChat(user) {
-    speakText(`${user} ke sath private chat kholi gayi.`);
-    alert(`Opened private chat with ${user}`);
+    alert("⚠️ Reported to Background Judicial Division.");
 }
 </script>
 
